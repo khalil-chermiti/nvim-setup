@@ -1,0 +1,39 @@
+{
+  "suggest.echodocSupport": true,
+  "suggest.maxCompleteItemCount": 10,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "javascript",
+    "typescript",
+    "typescriptreact",
+    "json",
+    "javascriptreact",
+    "typescript.tsx",
+    "css",
+    "scss",
+    "java",
+    "c",
+    "c++",
+    "html",
+    "python"
+  ],
+  "eslint.filetypes": [
+    "javascript",
+    "typescript",
+    "typescriptreact",
+    "javascriptreact",
+    "typescript.tsx"
+  ],
+  "languageserver": {
+    "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cpp", "objc", "objcpp"],
+      "trace.server": "verbose",
+      "initializationOptions": {
+        "cacheDirectory": "/tmp/ccls"
+      }
+    }
+  },
+  "diagnostic.errorSign": "•",
+  "diagnostic.warningSign": "•",
+  "diagnostic.infoSign": "•"
+}

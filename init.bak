@@ -1,0 +1,162 @@
+"****************** basic setup ******************"
+:set number
+:set autoindent
+:set tabstop=4
+:set shiftwidth=4
+:set smarttab
+:set softtabstop=4
+:set mouse=a
+
+" turn on hybrid line numbers 
+:set number relativenumber 
+:set nu rnu
+
+" key remaping 
+inoremap jj <esc>
+cnoremap jj <esc> 
+
+"****************** Plug extensions ******************"
+
+call plug#begin()
+
+Plug 'https://github.com/preservim/nerdtree' 
+
+Plug 'ryanoasis/vim-devicons' 
+
+
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'} 
+
+let g:coc_global_extensions = ['coc-tslint-plugin', 'coc-tsserver', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-prettier']
+
+"this will auto close ( [ {
+
+Plug 'jiangmiao/auto-pairs'
+
+" add highlighting and indenting to JSX and TSX files.
+
+Plug 'yuezk/vim-js'
+
+Plug 'HerringtonDarkholme/yats.vim'
+
+Plug 'maxmellon/vim-jsx-pretty'
+
+Plug 'itchyny/lightline.vim'
+
+
+if has('nvim')
+  function! UpdateRemotePlugins(...)
+    " Needed to refresh runtime files
+    let &rtp=&rtp
+    UpdateRemotePlugins
+  endfunction
+
+  Plug 'gelguy/wilder.nvim', { 'do': function('UpdateRemotePlugins') }
+else
+  Plug 'gelguy/wilder.nvim'
+
+  " To use Python remote plugin features in Vim, can be skipped
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif 
+
+call plug#end()
+
+
+"****************** wilder config ******************"
+
+" Key bindings can be changed, see below
+call wilder#setup({'modes': [':', '/', '?']})
+call wilder#set_option('renderer', wilder#wildmenu_renderer(
+      \ wilder#wildmenu_lightline_theme({
+      \   'highlights': {},
+      \   'highlighter': wilder#basic_highlighter(),
+      \   'separator': ' · ',
+      \ })))
+"****************** coc config ******************"
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+
+" TAB key to select completion 
+
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice.
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+
+" Formatting selected code.
+xmap f  <Plug>(coc-format-selected)
+nmap f  <Plug>(coc-format-selected)
+
+"****************** Nerd tree config ******************"
+
+let NERDTreeMinimalUI=1
+let NERDTreeShowHidden=1
+
+" remove underline from nerd tree 
+:hi cursorLine cterm=NONE gui=NONE
+
+" toggle nerdtree
+nnoremap tt :NERDTreeToggle<CR>
+nnoremap tf :NERDTreeFocus<CR>
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
+
+"****************** lightline ******************"
+set laststatus=2
+set noshowmode
+let g:lightline = {
+      \ 'colorscheme': 'solarized',
+      \ }
+"****************** webdevicons ******************"
+
+"loading the plugin
+let g:webdevicons_enable = 1
+
+" adding the flags to NERDTree
+let g:webdevicons_enable_nerdtree = 1
+
+" whether or not to show the nerdtree brackets around flags
+let g:webdevicons_conceal_nerdtree_brackets = 1
+
+" the amount of space to use after the glyph character (default ' ')
+let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+
+" Force extra padding in NERDTree so that the filetype icons line up vertically
+let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
+
